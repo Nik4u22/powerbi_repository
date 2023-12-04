@@ -1,0 +1,30 @@
+# Breadcrum Measures
+# Breadcrum for department
+BreadCrumb_Department = calculate(
+                               CONCATENATEX(
+                                            DISTINCT('Service Line'[Department]), 
+                                            'Service Line'[Department], ", "
+                                            )
+                                )
+
+# Breadcrum for ServiceLine
+BreadCrumb_ServiceLine = 
+VAR maxLength = 3
+VAR noOfValues =
+    COUNTROWS ( VALUES ( 'Service Line'[Service Line] ) )
+VAR title =
+    IF ( noOfValues = 1, "Service Line :  ", "Service Lines :  " )
+VAR topNValues =
+    CONCATENATEX (
+        TOPN ( maxLength, VALUES ( 'Service Line'[Service Line] ) ),
+        'Service Line'[Service Line],
+        " , "
+    )
+VAR extra =
+    IF ( noOfValues - maxLength > 0, "  (+" & noOfValues - maxLength & " more)" )
+RETURN
+    IF (
+        COUNTROWS ( ALL ( 'Service Line' ) ) = noOfValues,
+        "Service Lines : All Service Lines",
+        title & topNValues & extra
+    )

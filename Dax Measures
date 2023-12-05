@@ -7,24 +7,26 @@ BreadCrumb_Department = calculate(
                                             )
                                 )
 
-# Breadcrum for ServiceLine
-BreadCrumb_ServiceLine = 
-VAR maxLength = 3
+# Breadcrum for Country
+BreadCrumb_Country = 
+VAR maxLength = 2
 VAR noOfValues =
-    COUNTROWS ( VALUES ( 'Service Line'[Service Line] ) )
+        COUNTROWS ( VALUES ( Dim_customer_tb[country] ) )
 VAR title =
-    IF ( noOfValues = 1, "Service Line :  ", "Service Lines :  " )
+    IF ( noOfValues = 1, "Country :  ", "Countries :  " )
 VAR topNValues =
     CONCATENATEX (
-        TOPN ( maxLength, VALUES ( 'Service Line'[Service Line] ) ),
-        'Service Line'[Service Line],
+        TOPN ( maxLength, VALUES ( Dim_customer_tb[country] ) ),
+        Dim_customer_tb[country],
         " , "
     )
 VAR extra =
     IF ( noOfValues - maxLength > 0, "  (+" & noOfValues - maxLength & " more)" )
-RETURN
-    IF (
-        COUNTROWS ( ALL ( 'Service Line' ) ) = noOfValues,
-        "Service Lines : All Service Lines",
+
+VAR result =
+    IF(
+        noOfValues = [Country_Count],
+        "Country: All",
         title & topNValues & extra
     )
+RETURN result

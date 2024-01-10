@@ -30,3 +30,27 @@ VAR result =
         title & topNValues & extra
     )
 RETURN result
+
+--MTD YTD QTD Slicer
+MTD/YTD/QTD Selection =
+VAR TodayDate = TODAY()
+VAR YearStart = CALCULATE(STARTOFYEAR(DimDate[Month Year]), YEAR(DimDate[Month Year]) = YEAR(TodayDate))
+VAR QuarterStart = CALCULATE(STARTOFQUARTER(DimDate[Month Year]), YEAR(DimDate[Month Year]) = YEAR(TodayDate), QUARTER(DimDate[Month Year]) = QUARTER(TodayDate))
+VAR MonthStart = CALCULATE(STARTOFMONTH(DimDate[Month Year]), YEAR(DimDate[Month Year]) = YEAR(TodayDate), MONTH(DImDate[Month Year]) = MONTH(TodayDate))
+VAR Result = 
+UNION(
+	ADDCOLUMNS(
+		CALENDAR(YearStart, TodayDate),
+		"Selection", "YTD"
+	),
+	ADDCOLUMNS(
+		CALENDAR(QuarterStart, TodayDate),
+		"Selection", "QTD"
+	),
+	ADDCOLUMNS(
+		CALENDAR(MonthStart, TodayDate),
+		"Selection", "MTD"
+	)
+
+)
+RETURN Result

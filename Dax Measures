@@ -54,3 +54,7 @@ UNION(
 
 )
 RETURN Result
+
+
+--EXTERNALMEASURE to refer measure from other data models
+Measure_Name = EXTERNALMEASURE(<MeasureName>, <Datatype>, <Connection>)
